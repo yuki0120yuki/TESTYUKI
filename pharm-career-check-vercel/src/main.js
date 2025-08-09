@@ -1,31 +1,65 @@
-// src/main.js
+// LP ⇄ 診断 の切り替え
 document.addEventListener('DOMContentLoaded', () => {
-  const app = document.querySelector('#app');
-  if (!app) {
-    console.error('ルート要素 #app が見つかりません');
-    return;
-  }
+  const lp = document.getElementById('lp');
+  const diagnosis = document.getElementById('diagnosis');
+  const app = document.getElementById('app');
+  const cta = document.getElementById('cta-start');
+  const back = document.getElementById('back-to-lp');
 
-  // LPから「診断開始」された時に初期化したい場合
-  window.addEventListener('start-diagnosis', () => {
-    startDiagnosis(app);
+  cta.addEventListener('click', () => {
+    lp.hidden = true;
+    diagnosis.hidden = false;
+    startDiagnosis(app);       // 診断を開始
   });
 
-  // 直接URLを開いた場合の初期化（任意）
-  // startDiagnosis(app);
+  back.addEventListener('click', () => {
+    diagnosis.hidden = true;
+    lp.hidden = false;
+  });
 });
 
+// ====== ここから診断ロジック ======
 function startDiagnosis(app) {
-  // ここから診断の中身。例：最初の画面
+  // 質問1の例（ボタンで選択→次へ）
   app.innerHTML = `
-    <h1>薬学部キャリア診断</h1>
-    <p>20問の質問に答えて、あなたに合った薬剤師の仕事を診断します！</p>
-    <button id="start-btn">診断を始める</button>
+    <h2>質問1: あなたの得意な業務は？</h2>
+    <p>（例：調剤、接客など）</p>
+    <div class="choices">
+      <button class="answer-btn" data-score="pharmacy">調剤</button>
+      <button class="answer-btn" data-score="hospital">病院業務</button>
+      <button class="answer-btn" data-score="drugstore">販売</button>
+      <button class="answer-btn" data-score="homecare">在宅</button>
+    </div>
+    <button id="next-btn" disabled>次へ</button>
   `;
 
-  const startBtn = app.querySelector('#start-btn');
-  startBtn.addEventListener('click', () => {
-    // 1問目などに差し替え
-    app.innerHTML = `<p>質問1: あなたの得意な業務は？（例：調剤、接客など）</p>`;
+  const answerButtons = app.querySelectorAll('.answer-btn');
+  const nextBtn = app.querySelector('#next-btn');
+  let selected = null;
+
+  answerButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      selected = btn.dataset.score;
+      answerButtons.forEach(b => b.classList.remove('is-selected'));
+      btn.classList.add('is-selected');
+      nextBtn.disabled = false;
+    });
   });
+
+  nextBtn.addEventListener('click', () => {
+    if (!selected) return;
+    showQuestion2(app);   // 2問目へ（続きは自由に作れます）
+  });
+}
+
+function showQuestion2(app) {
+  app.innerHTML = `
+    <h2>質問2: チームで働くのが好きですか？</h2>
+    <div class="choices">
+      <button class="answer-btn">はい</button>
+      <button class="answer-btn">いいえ</button>
+    </div>
+    <button id="next-btn">次へ</button>
+  `;
+  // …以降は同様に質問をつなげればOK
 }
