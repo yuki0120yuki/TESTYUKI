@@ -1,32 +1,23 @@
-const questions = [
-  "友達といるとき、話をリードすることが多いですか？",
-  "困っている人を見ると、自然に声をかけますか？",
-  "細かい作業や記録を丁寧に行うのは得意ですか？"
-];
-let current = 0;
-const app = document.querySelector('#app');
+// main.js
 
-function showQuestion() {
-  if (current < questions.length) {
-    app.innerHTML = `
-      <div class="question">
-        <h2>Q${current + 1}. ${questions[current]}</h2>
-        <button onclick="next()">はい</button>
-        <button onclick="next()">いいえ</button>
-      </div>
-    `;
-  } else {
-    app.innerHTML = `
-      <h1>診断結果</h1>
-      <p>薬局薬剤師 70%</p>
-      <p>病院薬剤師 50%</p>
-    `;
+document.addEventListener("DOMContentLoaded", () => {
+  const app = document.querySelector('#root');
+
+  if (!app) {
+    console.error("ルート要素 #root が見つかりません");
+    return;
   }
-}
 
-window.next = function() {
-  current++;
-  showQuestion();
-};
+  // 最初の画面を表示
+  app.innerHTML = `
+    <h1>薬学部キャリア診断</h1>
+    <p>20問の質問に答えて、あなたに合った薬剤師の仕事を診断します！</p>
+    <button id="start-btn">診断を始める</button>
+  `;
 
-showQuestion();
+  // ここでボタンを取得してイベント登録
+  const startBtn = document.querySelector('#start-btn');
+  startBtn.addEventListener('click', () => {
+    app.innerHTML = `<p>質問1: あなたの得意な業務は？（例：調剤、接客など）</p>`;
+  });
+});
