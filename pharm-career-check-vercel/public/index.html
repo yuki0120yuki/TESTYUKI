@@ -1,18 +1,37 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>薬学生キャリア診断</title>
-  <style>
-    body { font-family: sans-serif; padding: 20px; background: #f7f9fc; color: #333; }
-    h1 { color: #2c3e50; }
-    .question { margin-bottom: 20px; }
-    button { padding: 10px 20px; margin-top: 20px; cursor: pointer; }
-  </style>
-</head>
 <body>
-  <div id="app"></div>
+  <!-- LP（ランディング） -->
+  <section id="lp">
+    <h1>薬学部キャリア診断</h1>
+    <p>20問の質問に答えて、あなたに合った薬剤師の仕事を診断します！</p>
+    <button id="cta-start">診断を受けてみる</button>
+  </section>
+
+  <!-- 診断ビュー（最初は非表示） -->
+  <section id="diagnosis" hidden>
+    <div id="app"></div>
+    <button id="back-to-lp">LPに戻る</button>
+  </section>
+
+  <!-- 診断ロジック（Viteがバンドル） -->
   <script type="module" src="/src/main.js"></script>
+
+  <!-- LP↔診断 切り替え制御 -->
+  <script>
+    const lp = document.getElementById('lp');
+    const diagnosis = document.getElementById('diagnosis');
+    const startBtn = document.getElementById('cta-start');
+    const backBtn = document.getElementById('back-to-lp');
+
+    startBtn.addEventListener('click', () => {
+      lp.hidden = true;
+      diagnosis.hidden = false;
+      // 必要なら診断初期化用のイベント
+      window.dispatchEvent(new Event('start-diagnosis'));
+    });
+
+    backBtn.addEventListener('click', () => {
+      diagnosis.hidden = true;
+      lp.hidden = false;
+    });
+  </script>
 </body>
-</html>
